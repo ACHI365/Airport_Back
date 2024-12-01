@@ -8,15 +8,13 @@ use App\Http\Controllers\StopController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-Log::info(config('mail.mailers.smtp'));  // Log the mail configuration
 
 Route::get('/token', function () {
     return csrf_token();
 });
-// Authentication routes
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
