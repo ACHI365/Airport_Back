@@ -20,7 +20,17 @@ Route::get('/token', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
-Route::get('/get-schedules', [ScheduleController::class, 'listSchedules']); // Public
+
+Route::get('/get-schedules', [ScheduleController::class, 'listSchedules']);
+
+Route::get('/route/{id}', [RouteController::class, 'getById']);
+Route::get('/routes', [RouteController::class, 'getAll']);
+
+Route::get('/schedule/{id}', [ScheduleController::class, 'getById']);
+Route::get('/schedules', [ScheduleController::class, 'getAll']);
+
+Route::get('/stop/{id}', [StopController::class, 'getById']);
+Route::get('/stops', [StopController::class, 'getAll']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -38,20 +48,14 @@ Route::middleware('auth:sanctum', AdminMiddleware::class)->group(function () {
     Route::delete('/bus/{id}', [BusController::class, 'delete']);
 
     Route::post('/route', [RouteController::class, 'create']);
-    Route::get('/route/{id}', [RouteController::class, 'getById']);
-    Route::get('/routes', [RouteController::class, 'getAll']);
     Route::put('/route/{id}', [RouteController::class, 'update']);
     Route::delete('/route/{id}', [RouteController::class, 'delete']);
 
     Route::post('/schedule', [ScheduleController::class, 'create']);
-    Route::get('/schedule/{id}', [ScheduleController::class, 'getById']);
-    Route::get('/schedules', [ScheduleController::class, 'getAll']);
     Route::put('/schedule/{id}', [ScheduleController::class, 'update']);
     Route::delete('/schedule/{id}', [ScheduleController::class, 'delete']);
 
     Route::post('/stop', [StopController::class, 'create']);
-    Route::get('/stop/{id}', [StopController::class, 'getById']);
-    Route::get('/stops', [StopController::class, 'getAll']);
     Route::put('/stop/{id}', [StopController::class, 'update']);
     Route::delete('/stop/{id}', [StopController::class, 'delete']);
 
