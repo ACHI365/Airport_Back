@@ -54,14 +54,19 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            // 'channels' => array_merge(
+            //     explode(',', env('LOG_STACK', 'single')),
+            //     ['stderr']
+            // ),
+            'channels' => ['single', 'stderr'],
             'ignore_exceptions' => false,
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
+            'level' => 'debug',
             'replace_placeholders' => true,
         ],
 

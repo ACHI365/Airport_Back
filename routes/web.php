@@ -11,6 +11,7 @@ use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
+
 Route::get('/token', function () {
     return csrf_token();
 });
