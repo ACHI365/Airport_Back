@@ -19,7 +19,9 @@ class StopsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('stops')->insert([
+        DB::table(table: 'stops')->insert([
+            ['stop_name' => 'Kutaisi', 'latitude' => 42.27, 'longitude' => 42.70],
+            ['stop_name' => 'Tbilisi', 'latitude' => 41.72, 'longitude' => 44.78],
             ['stop_name' => 'Zestafoni', 'latitude' => 42.11, 'longitude' => 43.05],
             ['stop_name' => 'Khashuri', 'latitude' => 41.99, 'longitude' => 43.60],
         ]);
