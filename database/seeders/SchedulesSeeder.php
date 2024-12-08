@@ -11,15 +11,15 @@ class SchedulesSeeder extends Seeder
             [
                 'bus_id' => 1,
                 'route_id' => 1,
-                'stop_id' => 1, // Kutaisi
+                'stop_id' => 1, 
                 'arrival_time' => '15:00:00',
                 'departure_time' => '15:05:00',
-                'date' => '2024-11-30', // Example date
+                'date' => '2024-11-30', 
             ],
             [
                 'bus_id' => 1,
                 'route_id' => 1,
-                'stop_id' => 3, // Zestafoni
+                'stop_id' => 3, 
                 'arrival_time' => '15:30:00',
                 'departure_time' => '15:35:00',
                 'date' => '2024-11-30',
@@ -27,7 +27,7 @@ class SchedulesSeeder extends Seeder
             [
                 'bus_id' => 1,
                 'route_id' => 1,
-                'stop_id' => 4, // Khashuri
+                'stop_id' => 4, 
                 'arrival_time' => '15:50:00',
                 'departure_time' => '15:55:00',
                 'date' => '2024-11-30',
@@ -35,7 +35,7 @@ class SchedulesSeeder extends Seeder
             [
                 'bus_id' => 1,
                 'route_id' => 1,
-                'stop_id' => 2, // Tbilisi
+                'stop_id' => 2, 
                 'arrival_time' => '16:00:00',
                 'departure_time' => '16:05:00',
                 'date' => '2024-11-30',

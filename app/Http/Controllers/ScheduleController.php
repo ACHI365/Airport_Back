@@ -15,22 +15,16 @@ class ScheduleController extends Controller
     public function listSchedules(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'start_stop_id' => 'required|integer|exists:stops,id',
-            'end_stop_id' => 'required|integer|exists:stops,id',
-            'day' => 'required|integer|min:1|max:31',
-            'month' => 'required|integer|min:1|max:12',
+            'route_id' => 'required|integer|exists:routes,id',
+            'date' => 'required|date',
         ]);
+        // dd($request->all());
 
-        $day = (int) $request->day;
-        $month = (int) $request->month;
 
-        $travelDate = now()->setDay($day)->setMonth($month)->toDateString();
-
-        $schedules = ScheduleQuery::getAvailableSchedules(
-            $request->start_stop_id,
-            $request->end_stop_id,
-            $travelDate
-        );
+        $schedules = Schedule::query()
+            ->where('route_id', $request->route_id)
+            ->where('date', $request->date)
+            ->get();
 
         return response()->json($schedules);
     }
@@ -48,7 +42,12 @@ class ScheduleController extends Controller
         ]);
 
         $schedule = Schedule::create($request->only([
-            'bus_id', 'route_id', 'stop_id', 'arrival_time', 'departure_time', 'date'
+            'bus_id',
+            'route_id',
+            'stop_id',
+            'arrival_time',
+            'departure_time',
+            'date'
         ]));
 
         $routeStops = DB::table('stops')
@@ -93,7 +92,12 @@ class ScheduleController extends Controller
 
         $schedule = Schedule::findOrFail($id);
         $schedule->update($request->only([
-            'bus_id', 'route_id', 'stop_id', 'arrival_time', 'departure_time', 'date'
+            'bus_id',
+            'route_id',
+            'stop_id',
+            'arrival_time',
+            'departure_time',
+            'date'
         ]));
 
         return response()->json($schedule);

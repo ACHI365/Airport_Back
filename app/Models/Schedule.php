@@ -49,4 +49,5 @@ class Schedule extends Model
     {
         return $query->where('date', $date);
     }
+
 }

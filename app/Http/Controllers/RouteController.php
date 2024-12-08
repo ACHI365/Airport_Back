@@ -12,11 +12,21 @@ class RouteController extends Controller
         $request->validate([
             'start_stop_id' => 'required|exists:stops,id',
             'end_stop_id' => 'required|exists:stops,id',
+
         ]);
 
         $route = Route::create($request->only(['start_stop_id', 'end_stop_id']));
 
         return response()->json($route, 201);
+    }
+
+    public function getByFromAndTo(Request $request)
+    {
+        $route = Route::where('start_stop_id', $request->route("from"))
+            ->where('end_stop_id', $request->route("to"))
+            ->firstOrFail();
+
+        return response()->json($route);
     }
 
     public function getById($id)

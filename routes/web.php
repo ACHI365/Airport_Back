@@ -24,6 +24,7 @@ Route::get('/get-schedules', [ScheduleController::class, 'listSchedules']);
 
 Route::get('/route/{id}', [RouteController::class, 'getById']);
 Route::get('/routes', [RouteController::class, 'getAll']);
+Route::get('/routes/from/{from}/to/{to}', [RouteController::class, 'getByFromAndTo']);
 
 Route::get('/schedule/{id}', [ScheduleController::class, 'getById']);
 Route::get('/schedules', [ScheduleController::class, 'getAll']);

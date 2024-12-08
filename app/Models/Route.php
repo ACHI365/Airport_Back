@@ -15,6 +15,7 @@ class Route extends Model
         'start_stop_id',
         'end_stop_id',
         'distance_km',
+        'price'
     ];
 
     public function startStop(): BelongsTo

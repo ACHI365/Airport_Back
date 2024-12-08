@@ -25,26 +25,38 @@ class ScheduleQuery
             ->pluck('start.route_id');
     }
 
-    private static function getSchedules($startStopId, $travelDate, $validRoutes): \Illuminate\Support\Collection
+    private static function getSchedules($startStopId, $travelDate, $endStopId): \Illuminate\Support\Collection
     {
-        return DB::table('schedules as start')
-            ->join('routes', 'start.route_id', '=', 'routes.id')
-            ->join('stops as start_stop', 'routes.start_stop_id', '=', 'start_stop.id')
-            ->join('stops as end_stop', 'routes.end_stop_id', '=', 'end_stop.id')
-            ->where('start.stop_id', $startStopId) // Filter for starting stop
-            ->whereIn('start.route_id', $validRoutes) // Filter for valid routes
-            ->where('start.date', $travelDate) // Date restriction for start schedules
-            ->select(
-                'start.id as schedule_id',
-                'start.departure_time',
-                'start.date as departure_date',
-                'routes.id as route_id',
-                'routes.start_stop_id',
-                'routes.end_stop_id',
-                DB::raw("CONCAT(start_stop.stop_name, ' - ', end_stop.stop_name) as route_name")
-            )
-            ->orderBy('start.departure_time')
+        // dd($startStopId, $travelDate); 
+        $res =   
+     Schedule::query()
+        ->whereHas('route', function ($query) use ($startStopId, $endStopId) {
+            $query->where('start_stop_id', $startStopId);
+            // ->where('end_stop_id', $endStopId);
+        })
+        // ->where('date', $travelDate)
             ->get();
+
+        dd($res, $startStopId, $travelDate, $endStopId );
+        return $res;    
+        // return DB::table('schedules as start')
+        //     ->join('routes', 'start.route_id', '=', 'routes.id')
+        //     ->join('stops as start_stop', 'routes.start_stop_id', '=', 'start_stop.id')
+        //     ->join('stops as end_stop', 'routes.end_stop_id', '=', 'end_stop.id')
+        //     ->where('start.stop_id', $startStopId) // Filter for starting stop
+        //     ->whereIn('start.route_id', $validRoutes) // Filter for valid routes
+        //     ->where('start.date', $travelDate) // Date restriction for start schedules
+        //     ->select(
+        //         'start.id as schedule_id',
+        //         'start.departure_time',
+        //         'start.date as departure_date',
+        //         'routes.id as route_id',
+        //         'routes.start_stop_id',
+        //         'routes.end_stop_id',
+        //         DB::raw("CONCAT(start_stop.stop_name, ' - ', end_stop.stop_name) as route_name")
+        //     )
+        //     ->orderBy('start.departure_time')
+        //     ->get();
     }
 
     private static function getAvailableSeats($startStopId, $scheduleIds): \Illuminate\Support\Collection
@@ -63,7 +75,7 @@ class ScheduleQuery
 
         $validRoutes = self::getValidRoutes($startStopId, $endStopId);
 
-        $schedules = self::getSchedules($startStopId, $travelDate, $validRoutes);
+        $schedules = self::getSchedules($startStopId, $travelDate, $endStopId);
 
         // Step 3: Get all schedule IDs
         $scheduleIds = $schedules->pluck('schedule_id');

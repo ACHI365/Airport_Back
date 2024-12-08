@@ -7,19 +7,18 @@ use App\Models\Schedule;
 use App\Models\Ticket;
 use App\Services\TicketService;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class TicketQuery
 {
     private static function getSchedule($schedule_id)
     {
-        return DB::table('schedules')
-            ->where('schedules.id', $schedule_id)
-            ->first();
+        return Schedule::find($schedule_id);
     }
 
     private static function getAvailableSeats($schedule_id, $stop_id)
     {
-        return DB::table('seat_availabilities')
+        return DB::table('  ')
             ->where('schedule_id', $schedule_id)
             ->where('stop_id', $stop_id)
             ->min('available_seats');
@@ -47,13 +46,14 @@ class TicketQuery
     {
         return DB::transaction(function () use ($request, $user) {
             // Step 1: Get Schedules
-            $schedule = self::getSchedule($request->schedule_id);
+            // find schedule based on route id and date
+            $schedule = Schedule::find($request->schedule_id);
 
             if (!$schedule) {
                 return response()->json(['message' => 'Invalid schedule for the selected stops.'], 400);
             }
-
-            if ($schedule->stop_id == $request->end_stop_id) {
+            $route = $schedule->route;
+            if ($route->start_stop_id == $request->end_stop_id) {
                 return response()->json(['message' => 'Invalid stops received'], 400);
             }
 
@@ -69,16 +69,23 @@ class TicketQuery
 
             // Step 4: Decrement seat availability for the relevant stops
             foreach ($affectedSchedules as $stopId => $scheduleId) {
-                self::updateAvailableSeats($scheduleId, $stopId, $request->quantity);
+                self::updateAvailableSeats($scheduleId, $stopId, quantity: $request->quantity);
             }
-
             // Step 5: Create the purchase
-            $pricePerTicket = 50.00;
+            $pricePerTicket = $schedule->route->price;
+
             $purchase = TicketService::createPurchase($request->quantity, $user->id, $schedule->id, $pricePerTicket);
 
             // Step 6: Create tickets for the purchase
-            $tickets = TicketService::createTickets($user->id, $purchase->id, $schedule->id,
-                $schedule->stop_id, $request->end_stop_id, $request->quantity, $pricePerTicket);
+            $tickets = TicketService::createTickets(
+                $user->id,
+                $purchase->id,
+                $schedule->id,
+                $schedule->stop_id,
+                $request->end_stop_id,
+                $request->quantity,
+                $pricePerTicket
+            );
             Ticket::insert($tickets); // Bulk insert tickets
 
             return response()->json([
