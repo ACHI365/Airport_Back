@@ -6,7 +6,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StopController;
 use App\Http\Controllers\TicketController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController;    
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +33,7 @@ Route::get('/stop/{id}', [StopController::class, 'getById'])->withoutMiddleware(
 Route::get('/stops', [StopController::class, 'getAll'])->withoutMiddleware('web');
 
 Route::middleware('auth:sanctum')->withoutMiddleware('web')->group(function () {
+    Route::get('/current-user', [UserController::class, 'getCurrentUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/buy-ticket', [TicketController::class, 'buyTicket']);
     Route::get('/user/tickets', [UserController::class, 'getTickets']);

@@ -115,4 +115,9 @@ class UserController extends Controller
         return response()->json($tickets);
     }
 
+    public function getCurrentUser(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
 }           
