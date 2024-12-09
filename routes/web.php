@@ -14,31 +14,31 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/token', function () {
     return csrf_token();
-});
+})->withoutMiddleware('web');
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::post('/register', [AuthController::class, 'register'])->withoutMiddleware('web');
+Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware('web');
+Route::get('/verify-email', [AuthController::class, 'verifyEmail'])->withoutMiddleware('web');
 
-Route::get('/get-schedules', [ScheduleController::class, 'listSchedules']);
+Route::get('/get-schedules', [ScheduleController::class, 'listSchedules'])->withoutMiddleware('web');
 
-Route::get('/route/{id}', [RouteController::class, 'getById']);
-Route::get('/routes', [RouteController::class, 'getAll']);
-Route::get('/routes/from/{from}/to/{to}', [RouteController::class, 'getByFromAndTo']);
+Route::get('/route/{id}', [RouteController::class, 'getById'])->withoutMiddleware('web');
+Route::get('/routes', [RouteController::class, 'getAll'])->withoutMiddleware('web');
+Route::get('/routes/from/{from}/to/{to}', [RouteController::class, 'getByFromAndTo'])->withoutMiddleware('web');
 
-Route::get('/schedule/{id}', [ScheduleController::class, 'getById']);
-Route::get('/schedules', [ScheduleController::class, 'getAll']);
+Route::get('/schedule/{id}', [ScheduleController::class, 'getById'])->withoutMiddleware('web');
+Route::get('/schedules', [ScheduleController::class, 'getAll'])->withoutMiddleware('web');
 
-Route::get('/stop/{id}', [StopController::class, 'getById']);
-Route::get('/stops', [StopController::class, 'getAll']);
+Route::get('/stop/{id}', [StopController::class, 'getById'])->withoutMiddleware('web');
+Route::get('/stops', [StopController::class, 'getAll'])->withoutMiddleware('web');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->withoutMiddleware('web')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/buy-ticket', [TicketController::class, 'buyTicket']);
     Route::get('/get-user-purchases', [UserController::class, 'listPurchases']);
 });
 
-Route::middleware('auth:sanctum', AdminMiddleware::class)->group(function () {
+Route::middleware('auth:sanctum', AdminMiddleware::class)->withoutMiddleware('web')->group(function () {
     Route::get('/get-all-purchases', [UserController::class, 'listAllPurchases']);
 
     Route::post('/bus', [BusController::class, 'create']);
@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum', AdminMiddleware::class)->group(function () {
     Route::post('/schedule', [ScheduleController::class, 'create']);
     Route::put('/schedule/{id}', [ScheduleController::class, 'update']);
     Route::delete('/schedule/{id}', [ScheduleController::class, 'delete']);
+    Route::post('/schedules/bulk', [ScheduleController::class, 'createBulk']);
 
     Route::post('/stop', [StopController::class, 'create']);
     Route::put('/stop/{id}', [StopController::class, 'update']);

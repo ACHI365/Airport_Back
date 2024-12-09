@@ -111,4 +111,35 @@ class ScheduleController extends Controller
         return response()->json(['message' => 'Schedule deleted successfully.']);
     }
 
+    public function createBulk(Request $request)
+    {
+        $request->validate([
+            'bus_id' => 'required|exists:buses,id',
+            'route_id' => 'required|exists:routes,id',
+            'start_date' => 'required|date',
+            'consecutive_days' => 'required|integer|min:1|max:365',
+            'arrival_time' => 'required|date_format:H:i:s',
+            'departure_time' => 'required|date_format:H:i:s',
+        ]);
+
+        $schedules = [];
+        $startDate = \Carbon\Carbon::parse($request->start_date);
+
+        for ($i = 0; $i < $request->consecutive_days; $i++) {
+            $currentDate = $startDate->copy()->addDays($i);
+            
+            $schedule = Schedule::create([
+                'bus_id' => $request->bus_id,
+                'route_id' => $request->route_id,
+                'date' => $currentDate->format('Y-m-d'),
+                'arrival_time' => $request->arrival_time,
+                'departure_time' => $request->departure_time,
+            ]);
+
+            $schedules[] = $schedule;
+        }
+
+        return response()->json($schedules, 201);
+    }
+
 }

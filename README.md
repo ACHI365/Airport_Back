@@ -32,11 +32,11 @@ This will start the application and automatically run the migrations and seed th
 - **Request**:
     ```json
     {
-        "email": "user@example.com",
-        "first_name": "John",
-        "last_name": "Doe",
-        "password": "password",
-        "password_confirmation": "password"
+            "email": "user@example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "password": "password",
+            "password_confirmation": "password"
     }
     ```
 - **Response**:
