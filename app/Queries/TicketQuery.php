@@ -39,6 +39,14 @@ class TicketQuery
         $schedule->save();
     }
 
+    // count how many tickets are already bought by this user on this schedule
+    private static function countTickets($user_id, $schedule_id): int
+    {
+        return Ticket::where('user_id', $user_id)
+            ->where('schedule_id', $schedule_id)
+            ->count();
+    }
+
     public static function buyTicket($request, $user): \Illuminate\Http\JsonResponse
     {
         return DB::transaction(function () use ($request, $user) {
@@ -63,8 +71,15 @@ class TicketQuery
 
             // update available seats
             self::updateAvailableSeats($schedule->id, $request->quantity);
+
+            // Step 3: Check if user already bought tickets for this schedule
+            $ticketCount = self::countTickets($user->id, $schedule->id);
+
+            if ($ticketCount + $request->quantity > 3) {
+                return response()->json(['message' => 'Can not buy more than 3'], 400);
+            }
             
-            // Step 5: Create the purchase
+            // Step 5: Create the purchase  
             $pricePerTicket = $schedule->route->price;
 
             $purchase = TicketService::createPurchase($request->quantity, $user->id, $schedule->id, $pricePerTicket);

@@ -32,6 +32,9 @@ class UserController extends Controller
         return UserService::purchaseDTO($purchases);
     }
 
+    // write function get_tickets
+    
+
 
     public function create(Request $request)
     {
@@ -90,4 +93,26 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted successfully.']);
     }
 
-}
+    public function getTickets(Request $request)
+    {
+        $user = $request->user();
+        
+        $tickets = $user->tickets()
+            ->with(['purchase.schedule.route.startStop', 'purchase.schedule.route.endStop'])
+            ->get()
+            ->map(function ($ticket) {
+                return [
+                    'ticket_id' => $ticket->id,
+                    'purchase_id' => $ticket->purchase_id,
+                    'schedule_id' => $ticket->schedule_id,
+                    'route_name' => "{$ticket->purchase->schedule->route->startStop->stop_name} - {$ticket->purchase->schedule->route->endStop->stop_name}",
+                    'price' => $ticket->price,
+                    'departure_time' => $ticket->purchase->schedule->departure_time,
+                    'departure_date' => $ticket->purchase->schedule->date,
+                ];
+            });
+
+        return response()->json($tickets);
+    }
+
+}           

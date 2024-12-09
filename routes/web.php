@@ -35,7 +35,7 @@ Route::get('/stops', [StopController::class, 'getAll'])->withoutMiddleware('web'
 Route::middleware('auth:sanctum')->withoutMiddleware('web')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/buy-ticket', [TicketController::class, 'buyTicket']);
-    Route::get('/get-user-purchases', [UserController::class, 'listPurchases']);
+    Route::get('/user/tickets', [UserController::class, 'getTickets']);
 });
 
 Route::middleware('auth:sanctum', AdminMiddleware::class)->withoutMiddleware('web')->group(function () {
@@ -60,9 +60,9 @@ Route::middleware('auth:sanctum', AdminMiddleware::class)->withoutMiddleware('we
     Route::put('/stop/{id}', [StopController::class, 'update']);
     Route::delete('/stop/{id}', [StopController::class, 'delete']);
 
-    Route::post('/user', [UserController::class, 'create']);
-    Route::get('/user/{id}', [UserController::class, 'getById']);
+    Route::post('/users', [UserController::class, 'create']);
+    Route::get('/users/{id}', [UserController::class, 'getById']);
     Route::get('/users', [UserController::class, 'getAll']);
-    Route::put('/user/{id}', [UserController::class, 'update']);
-    Route::delete('/user/{id}', [UserController::class, 'delete']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'delete']);
 });
