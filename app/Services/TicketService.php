@@ -26,8 +26,6 @@ class TicketService
                 'user_id' => $user_id,
                 'purchase_id' => $purchase_id,
                 'schedule_id' => $schedule_id,
-                'start_stop_id' => $start_stop_id,
-                'end_stop_id' => $end_stop_id,
                 'price' => $pricePerTicket,
                 'created_at' => now(),
                 'updated_at' => now(),

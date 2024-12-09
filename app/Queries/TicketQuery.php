@@ -32,7 +32,7 @@ class TicketQuery
             ->pluck('id', 'stop_id');
     }
 
-    private static function updateAvailableSeats($scheduleId, $stopId, $quantity): void
+    private static function updateAvailableSeats($scheduleId, $quantity): void
     {
         $schedule = Schedule::find($scheduleId);
         $schedule->available_seats -= $quantity;
@@ -61,13 +61,9 @@ class TicketQuery
                 return response()->json(['message' => 'Not enough seats available.'], 400);
             }
 
-            // Step 3: Determine affected schedules for the route
-            $affectedSchedules = self::getAffectedSchedules($schedule->route_id, $schedule->stop_id, $request->end_stop_id);
-
-            // Step 4: Decrement seat availability for the relevant stops
-            foreach ($affectedSchedules as $stopId => $scheduleId) {
-                self::updateAvailableSeats($scheduleId, $stopId, quantity: $request->quantity);
-            }
+            // update available seats
+            self::updateAvailableSeats($schedule->id, $request->quantity);
+            
             // Step 5: Create the purchase
             $pricePerTicket = $schedule->route->price;
 
