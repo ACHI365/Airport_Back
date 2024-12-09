@@ -125,6 +125,10 @@ class ScheduleController extends Controller
         $schedules = [];
         $startDate = \Carbon\Carbon::parse($request->start_date);
 
+        // find the bus
+        $bus = DB::table('buses')->where('id', $request->bus_id)->first();
+        $bus_seats = $bus->capacity;
+
         for ($i = 0; $i < $request->consecutive_days; $i++) {
             $currentDate = $startDate->copy()->addDays($i);
             
@@ -134,6 +138,7 @@ class ScheduleController extends Controller
                 'date' => $currentDate->format('Y-m-d'),
                 'arrival_time' => $request->arrival_time,
                 'departure_time' => $request->departure_time,
+                'available_seats' => $bus_seats,
             ]);
 
             $schedules[] = $schedule;

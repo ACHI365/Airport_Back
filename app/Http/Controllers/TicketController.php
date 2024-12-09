@@ -17,8 +17,7 @@ class TicketController extends Controller
     {
         $request->validate([
             'schedule_id' => 'required|exists:schedules,id',
-            'end_stop_id' => 'required|exists:stops,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1|max:3',
         ]);
 
         $user = $request->user();

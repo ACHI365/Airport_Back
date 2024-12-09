@@ -17,7 +17,8 @@ class Schedule extends Model
         'stop_id',
         'arrival_time',
         'departure_time',
-        'date'
+        'date', 
+        'available_seats'
     ];
 
     public function bus(): BelongsTo

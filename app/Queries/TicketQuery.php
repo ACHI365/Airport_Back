@@ -18,10 +18,8 @@ class TicketQuery
 
     private static function getAvailableSeats($schedule_id, $stop_id)
     {
-        return DB::table('  ')
-            ->where('schedule_id', $schedule_id)
-            ->where('stop_id', $stop_id)
-            ->min('available_seats');
+        // get available seat attribute from the schedule
+        return Schedule::find($schedule_id)->available_seats;
     }
 
     private static function getAffectedSchedules($route_id, $start_stop_id, $end_stop_id)
@@ -36,10 +34,9 @@ class TicketQuery
 
     private static function updateAvailableSeats($scheduleId, $stopId, $quantity): void
     {
-        DB::table('seat_availabilities')
-            ->where('schedule_id', $scheduleId)
-            ->where('stop_id', $stopId)
-            ->decrement('available_seats', $quantity);
+        $schedule = Schedule::find($scheduleId);
+        $schedule->available_seats -= $quantity;
+        $schedule->save();
     }
 
     public static function buyTicket($request, $user): \Illuminate\Http\JsonResponse
